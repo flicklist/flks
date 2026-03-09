@@ -1,0 +1,45 @@
+name: Create release
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Get addon info
+        id: addon
+        run: |
+          VERSION=$(grep -oP 'version="\K[^"]+' addon.xml)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Build Kodi zip
+        run: |
+          mkdir -p service.flicklist.scrobbler
+          cp -r addon.xml service.py default.py icon.png resources CHANGELOG.md service.flicklist.scrobbler/
+          [ -f LICENSE ] && cp LICENSE service.flicklist.scrobbler/
+          zip -r service.flicklist.scrobbler-${{ steps.addon.outputs.version }}.zip service.flicklist.scrobbler/
+
+      - name: Extract release notes
+        id: notes
+        run: |
+          # Extract the latest version's changelog entry
+          awk '/^## v/{if(found) exit; found=1; next} found{print}' CHANGELOG.md > release_notes.txt
+          echo "notes<<EOF" >> $GITHUB_OUTPUT
+          cat release_notes.txt >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: FlickList Scrobbler v${{ steps.addon.outputs.version }}
+          body: ${{ steps.notes.outputs.notes }}
+          files: service.flicklist.scrobbler-${{ steps.addon.outputs.version }}.zip
