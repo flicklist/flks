@@ -18,7 +18,7 @@ jobs:
       - name: Get addon info
         id: addon
         run: |
-          VERSION=$(grep -oP 'version="\K[^"]+' addon.xml)
+          VERSION=$(sed -n 's/.*version="\([^"]*\)".*/\1/p' addon.xml | head -1)
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Build Kodi zip
