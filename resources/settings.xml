@@ -30,6 +30,12 @@
         <setting label="Show notification on scrobble" type="bool" id="notify.scrobble" default="true"/>
         <setting label="Show notification on errors" type="bool" id="notify.errors" default="true"/>
     </category>
+    <category label="Updates">
+        <setting label="Update action" type="enum" id="update.action" values="Prompt|Automatic|Notification Only|Off" default="0"/>
+        <setting label="Update check delay (seconds)" type="slider" id="update.delay" default="15" range="5,5,300"/>
+        <setting label="Check for Updates" type="action" id="update.check" action="RunScript(service.flicklist.scrobbler, update_check)"/>
+        <setting label="Rollback to Previous Version" type="action" id="update.rollback" action="RunScript(service.flicklist.scrobbler, rollback)"/>
+    </category>
     <category label="Advanced">
         <setting label="API URL (do not change unless you know what you're doing)" type="text" id="api_url" default="https://flicklist.tv/api"/>
         <setting label="Retry failed scrobbles" type="bool" id="retry.enabled" default="true"/>

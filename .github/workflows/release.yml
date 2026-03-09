@@ -28,6 +28,29 @@ jobs:
           [ -f LICENSE ] && cp LICENSE service.flicklist.scrobbler/
           zip -r service.flicklist.scrobbler-${{ steps.addon.outputs.version }}.zip service.flicklist.scrobbler/
 
+      - name: Update packages for auto-updater
+        run: |
+          VERSION=${{ steps.addon.outputs.version }}
+          # Update version file
+          echo "$VERSION" > packages/flks_version
+          # Copy zip to packages
+          cp service.flicklist.scrobbler-${VERSION}.zip packages/
+          # Update index.html
+          cat > packages/index.html << 'HTMLEOF'
+          <html><body>
+          <h1>FlickList Kodi Scrobbler</h1>
+          HTMLEOF
+          echo "<p><a href=\"service.flicklist.scrobbler-${VERSION}.zip\">service.flicklist.scrobbler-${VERSION}.zip</a></p>" >> packages/index.html
+          echo "</body></html>" >> packages/index.html
+
+      - name: Commit updated packages
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add packages/
+          git commit -m "release: update packages for v${{ steps.addon.outputs.version }}" || true
+          git push origin HEAD:main
+
       - name: Extract release notes
         id: notes
         run: |

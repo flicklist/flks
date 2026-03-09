@@ -1,0 +1,8 @@
+[B]v1.0.4[/B]
+- Initial public release
+- SQLite offline queue (500 cap, 7-day TTL)
+- Device code auth with QR code
+- 30s heartbeat timer
+- Works with any Kodi video addon
+- Pirate addon support (ID resolution + title/year fallback)
+- Per-event and per-media-type toggles

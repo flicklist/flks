@@ -24,6 +24,8 @@ def main():
     else:
         options.append('Status: {}'.format(status))
         options.append('Logout')
+    options.append('Check for Updates')
+    options.append('Rollback Version')
     options.append('Settings')
 
     dialog = xbmcgui.Dialog()
@@ -38,6 +40,12 @@ def main():
         handle_authorize()
     elif selected == 'Logout':
         handle_logout()
+    elif selected == 'Check for Updates':
+        from resources.lib.updater import update_check
+        update_check(4)
+    elif selected == 'Rollback Version':
+        from resources.lib.updater import rollback_check
+        rollback_check()
     elif selected == 'Settings':
         addon.openSettings()
 
