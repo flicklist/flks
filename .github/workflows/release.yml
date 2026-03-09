@@ -10,8 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      pages: write
-      id-token: write
 
     steps:
       - name: Checkout
@@ -20,7 +18,7 @@ jobs:
       - name: Get addon info
         id: addon
         run: |
-          VERSION=$(sed -n 's/.*version="\([^"]*\)".*/\1/p' addon.xml | head -1)
+          VERSION=$(sed -n 's/.*<addon.*version="\([^"]*\)".*/\1/p' addon.xml)
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Build Kodi zip
@@ -45,23 +43,14 @@ jobs:
           body: ${{ steps.notes.outputs.notes }}
           files: service.flicklist.scrobbler-${{ steps.addon.outputs.version }}.zip
 
-      - name: Build Pages site
+      - name: Update packages for GitHub Pages
         run: |
-          mkdir -p _site
-          cp service.flicklist.scrobbler-*.zip _site/
-          ls -la _site/
-          cat > _site/index.html << 'PAGEEOF'
-          <!DOCTYPE html>
-          <html><head><meta charset="utf-8"><title>FlickList Kodi Scrobbler</title></head>
-          <body><h1>FlickList Scrobbler for Kodi</h1>
-          <p><a href="https://github.com/flicklist/flks/releases/latest">Download latest release</a></p>
-          </body></html>
-          PAGEEOF
-
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: _site
-
-      - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v4
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout main
+          mkdir -p packages
+          cp service.flicklist.scrobbler-${{ steps.addon.outputs.version }}.zip packages/
+          echo '<!DOCTYPE html><a href="service.flicklist.scrobbler-${{ steps.addon.outputs.version }}.zip">service.flicklist.scrobbler-${{ steps.addon.outputs.version }}.zip</a>' > packages/index.html
+          git add packages/
+          git commit -m "release: v${{ steps.addon.outputs.version }} zip"
+          git push
