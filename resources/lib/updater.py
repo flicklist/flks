@@ -260,10 +260,20 @@ def update_addon(new_version, action, show_after=True):
         xbmcgui.Dialog().ok('FLKS Updater', 'Unzip failed.\nPlease install manually.')
         return
 
-    # Post-install: tell Kodi to reload
+    # Reload addon in Kodi
+    xbmc.executebuiltin('UpdateLocalAddons()')
+    xbmc.sleep(1000)
+    xbmc.executebuiltin('DisableAddon({})'.format(ADDON_ID))
+    xbmc.sleep(500)
+    xbmc.executebuiltin('EnableAddon({})'.format(ADDON_ID))
+
+    # Post-install: notify user and handle rollback settings
     if is_rollback:
-        addon = xbmcaddon.Addon(ADDON_ID)
-        addon.setSetting('update.action', '3')  # set to Off after rollback
+        try:
+            addon = xbmcaddon.Addon(ADDON_ID)
+            addon.setSetting('update.action', '3')  # set to Off after rollback
+        except Exception:
+            pass
         xbmcgui.Dialog().ok('FLKS Updater', 'Success.\nRolled back to version [B]{}[/B].\nUpdate checking set to OFF.'.format(new_version))
     elif action in (0, 4):
         if show_after:
@@ -278,12 +288,3 @@ def update_addon(new_version, action, show_after=True):
             xbmcgui.Dialog().ok('FLKS Updater', 'Success.\nUpdated to version [B]{}[/B].'.format(new_version))
     elif action == 1:
         xbmcgui.Dialog().notification('FLKS Updater', 'Updated to v{}'.format(new_version), xbmcgui.NOTIFICATION_INFO)
-
-    # Reload addon in Kodi
-    xbmc.executebuiltin('UpdateLocalAddons()')
-    xbmc.sleep(500)
-    xbmc.executebuiltin('EnableAddon({})'.format(ADDON_ID))
-    xbmc.sleep(500)
-    xbmc.executebuiltin('DisableAddon({})'.format(ADDON_ID))
-    xbmc.sleep(500)
-    xbmc.executebuiltin('EnableAddon({})'.format(ADDON_ID))
