@@ -42,15 +42,3 @@ jobs:
           name: FlickList Scrobbler v${{ steps.addon.outputs.version }}
           body: ${{ steps.notes.outputs.notes }}
           files: service.flicklist.scrobbler-${{ steps.addon.outputs.version }}.zip
-
-      - name: Update packages for GitHub Pages
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git checkout main
-          mkdir -p packages
-          cp service.flicklist.scrobbler-${{ steps.addon.outputs.version }}.zip packages/
-          echo '<!DOCTYPE html><a href="service.flicklist.scrobbler-${{ steps.addon.outputs.version }}.zip">service.flicklist.scrobbler-${{ steps.addon.outputs.version }}.zip</a>' > packages/index.html
-          git add packages/
-          git commit -m "release: v${{ steps.addon.outputs.version }} zip"
-          git push
