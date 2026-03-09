@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<settings>
+    <category label="Account">
+        <setting label="FlickList Status" type="text" id="status" default="Not authorized" enable="false"/>
+        <setting label="Authorize" type="action" id="authorize" action="RunScript(service.flicklist.scrobbler, authorize)"/>
+        <setting label="Logout" type="action" id="logout" action="RunScript(service.flicklist.scrobbler, logout)"/>
+    </category>
+    <category label="Scrobbling">
+        <setting label="Scrobble Events" type="lsep"/>
+        <setting label="Start playback" type="bool" id="event.start" default="true"/>
+        <setting label="Pause playback" type="bool" id="event.pause" default="true"/>
+        <setting label="Resume playback" type="bool" id="event.resume" default="true"/>
+        <setting label="Stop playback" type="bool" id="event.stop" default="true"/>
+        <setting label="Playback finished" type="bool" id="event.end" default="true"/>
+        <setting label="After seeking" type="bool" id="event.seek" default="true"/>
+        <setting label="Heartbeat" type="bool" id="event.heartbeat" default="true"/>
+
+        <setting label="Heartbeat" type="lsep"/>
+        <setting label="Heartbeat interval (seconds)" type="slider" id="interval" default="30" range="10,5,120"/>
+
+        <setting label="Filters" type="lsep"/>
+        <setting label="Minimum watch time before scrobbling (seconds)" type="slider" id="min_watch_seconds" default="30" range="5,5,120"/>
+        <setting label="Stale pause timeout (hours)" type="slider" id="stale_pause_hours" default="4" range="1,1,12"/>
+
+        <setting label="Media Types" type="lsep"/>
+        <setting label="Movies" type="bool" id="mediatype.movie" default="true"/>
+        <setting label="TV Episodes" type="bool" id="mediatype.episode" default="true"/>
+    </category>
+    <category label="Notifications">
+        <setting label="Show notification on scrobble" type="bool" id="notify.scrobble" default="true"/>
+        <setting label="Show notification on errors" type="bool" id="notify.errors" default="true"/>
+    </category>
+    <category label="Advanced">
+        <setting label="API URL (do not change unless you know what you're doing)" type="text" id="api_url" default="https://flicklist.tv/api"/>
+        <setting label="Retry failed scrobbles" type="bool" id="retry.enabled" default="true"/>
+        <setting label="Maximum queued events" type="number" id="retry.max_queue" default="500"/>
+    </category>
+</settings>
