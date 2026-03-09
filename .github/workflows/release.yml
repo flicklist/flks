@@ -48,7 +48,8 @@ jobs:
       - name: Build Pages site
         run: |
           mkdir -p _site/packages
-          cp service.flicklist.scrobbler-${{ steps.addon.outputs.version }}.zip _site/packages/
+          cp service.flicklist.scrobbler-*.zip _site/packages/
+          ls -la _site/packages/
           cat > _site/index.html << 'PAGEEOF'
           <!DOCTYPE html>
           <html><head><meta charset="utf-8"><title>FlickList Kodi Scrobbler</title></head>
