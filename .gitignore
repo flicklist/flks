@@ -46,6 +46,7 @@ desktop.ini
 # QR codes (generated at runtime)
 *_qr.png
 
-# Archives
+# Archives (except packages/ for Kodi installs)
 *.zip
 *.tar.gz
+!packages/*.zip
